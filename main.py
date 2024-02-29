@@ -1,12 +1,16 @@
-from utils import Bounds, Input
-from user_data import get_input, function_parser
+from utils import get_input
+from methods import dyhotomy, chord, newton
+
 
 def main():
-    # user_input = get_input()
-    func = input("func: ")
-    result = function_parser(func, 1)
+    user_input = get_input()
     
-    print(f"result = {result}")
+    result = newton(
+        user_input.func,
+        user_input.bounds, 
+        user_input.eps)
+    
+    print(f"{result}")
     
     pass
 
