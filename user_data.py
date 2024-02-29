@@ -20,21 +20,41 @@ def function_parser(func: str, x: float) -> str:
         if "log(" in func:
             find_index = func.find("log(")
             inner_func_start_index = find_index + len("log(")
-            inner_func_end_index = inner_func_start_index + func[inner_func_start_index:].find(")")
+            inner_func_end_index = _find_bracket_end(func, find_index)
             
             inner_func = func[inner_func_start_index:inner_func_end_index]
             
-            inner_bracket_amount = inner_func.count("(")
-            inner_func += ")" * inner_bracket_amount
-            
-            full_inner_func = func[find_index:inner_func_end_index + inner_bracket_amount + 1]
+            full_inner_func = func[find_index:inner_func_end_index + 1]
             
             parsed_inner_func = function_parser(inner_func, x)
             
-            temp_result = np.log(eval(parsed_inner_func))
+            temp_result = np.log10(eval(parsed_inner_func))
             func = func.replace(full_inner_func, str(temp_result), 1)
-            
+    
+    if _have_unparsed(func):
+        func = function_parser(func, x)
+    
     return func
+
+
+def _find_bracket_end(func: str, func_index) -> int:
+    open_amount = 0
+    close_amount = 0
+    for i in range(func_index, len(func)):
+        if func[i] == "(":
+            open_amount += 1
+        elif func[i] == ")":
+            close_amount += 1
+        
+        if open_amount != 0 and open_amount == close_amount:
+            return i
+    
+    return -1
+        
+
+# def _bracket_funcs(func, func_name, x):
+#     pass
+
 
 # Проверяет есть ли в функции отпарсилась или нет
 def _have_unparsed(func: str) -> bool:
