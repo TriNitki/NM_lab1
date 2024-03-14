@@ -7,8 +7,8 @@ class Bounds:
         self.r = right_bound
 
 class Input:
-    def __init__(self, method_num: int, func: str, bounds: Bounds, eps: float) -> None:
-        self.method_num = method_num
+    def __init__(self, method: int, func: str, bounds: Bounds, eps: float) -> None:
+        self.method = method
         self.func = func
         self.bounds = bounds
         self.eps = eps
@@ -22,7 +22,15 @@ class Result:
     def __str__(self) -> str:
         return f"{'Решение уравнения:':40}{self.result_value:.7f}\n" + \
             f"{'Значение функции в найденной точке x:':40}{self.func_value:.7f}\n" + \
-            f"{'Погрешность полученного решения:':40}{self.eps:.6f}%"
+            f"{'Погрешность полученного решения:':40}{self.eps*100:.6f}%"
+    
+    def to_dict(self) -> dict:
+        return {
+            "x": round(self.result_value, 7), 
+            "f(x)": round(self.func_value, 7), 
+            "eps": f"{self.eps*100:.6f}%"
+        }
+        
 
 def get_input() -> Input:
     method_num = int(input("Введите номер метода: "))
@@ -39,7 +47,7 @@ def get_input() -> Input:
 def f(func, x_value):
     return eval(function_parser(func, x_value))
 
-def d(func, x_value):
+def g(func, x_value):
     x = symbols('x')
     dir_func = str(diff(eval(func), x))
     return eval(function_parser(dir_func, x_value))

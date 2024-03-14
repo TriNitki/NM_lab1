@@ -1,0 +1,7 @@
+{
+    "method": 6,
+    "func": "x**3-5*x-9",
+    "border_l": 2,
+    "border_r": 3,
+    "eps": 0.000001
+}
