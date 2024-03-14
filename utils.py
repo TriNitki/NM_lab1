@@ -44,10 +44,10 @@ def get_input() -> Input:
     
     return user_input    
 
-def f(func, x_value):
+def f(func, x_value) -> float:
     return eval(function_parser(func, x_value))
 
-def g(func, x_value):
+def g(func, x_value) -> float:
     x = symbols('x')
     dir_func = str(diff(eval(func), x))
     return eval(function_parser(dir_func, x_value))

@@ -77,17 +77,19 @@ def combined(func: str, bounds: Bounds, eps: float) -> Result:
     return result
 
 def iteration(func: str, bounds: Bounds, eps: float) -> Result:
-    bound_l = bounds.l
-    x1 = bound_l
-    k = g(func, bound_l)
+    x0 = bounds.l
+    
     while True:
-        bound_l = x1
-        x1 -= f(func, bound_l)*k
-        
-        if abs(x1 - bound_l) <= eps:
+        x1 = g(func, x0)
+
+        if abs(x1 - x0) <= eps:
             root = x1
             break
         
+        x0 = x1
+    
+    print(f"root = {root}")
+    
     func_value = f(func, root)
     result = Result(root, func_value, func_value)
     return result
