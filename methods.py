@@ -7,12 +7,13 @@ def dyhotomy(func: str, bounds: Bounds, eps: float) -> Result:
     while abs(f(func, bound_r)-f(func, bound_l)) > eps:
         mid = (bound_l+bound_r) / 2
         if f(func, mid) == 0 or abs(f(func, mid)) < eps:
-            root = mid
             break
         elif f(func, bound_l)*f(func, mid) < 0:
             bound_r = mid
         else:
             bound_l = mid
+
+    root = mid
 
     func_value = f(func, root)
 
@@ -76,12 +77,18 @@ def combined(func: str, bounds: Bounds, eps: float) -> Result:
     result = Result(root, func_value, func_value)
     return result
 
-def iteration(func: str, bounds: Bounds, eps: float) -> Result:
+def iteration(func: str, bounds: Bounds, eps: float, max_attempts: int = 10) -> Result:
     x0 = bounds.l
+    attempt = 0
     
     while True:
+        attempt += 1
         x1 = g(func, x0)
 
+        if max_attempts <= attempt:
+            root = g(func, bounds.l)
+            break
+        
         if abs(x1 - x0) <= eps:
             root = x1
             break
@@ -95,22 +102,27 @@ def iteration(func: str, bounds: Bounds, eps: float) -> Result:
     return result
 
 def golden(func: str, bounds: Bounds, eps: float) -> Result:
-    bound_l = bounds.l
-    bound_r = bounds.r
+    import math
+    
+    a = bounds.l
+    b = bounds.r
+    
+    j = (math.sqrt(5) + 1) / 2
+    
     while True:
-        x1 = bound_r - (bound_r-bound_l) / 1.618
-        x2 = bound_l + (bound_r-bound_l) / 1.618
-        y1 = f(func, x1)
-        y2 = f(func, x2)
+        d = a + (b - a) / j
+        c = a + (b - a) / j**2
         
-        if y1 >= y2:
-            bound_l = x1
+        if (f(func, a) * f(func, d) <= 0):
+            b = d
         else:
-            bound_r = x2
-
-        if abs(bound_r-bound_l) < eps:
-            root = (bound_l+bound_r) / 2
+            a = c
+        
+        if abs((b - a) / 2) <= eps:
+            root = c
             break
+    
+    
     
     func_value = f(func, root)
     result = Result(root, func_value, func_value)
